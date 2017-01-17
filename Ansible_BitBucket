@@ -1,0 +1,33 @@
+---
+- hosts: webservers
+  remote_user: root
+  sudo: true
+  sudo_user: root
+
+  vars_prompt:
+    - name: "githuburl"
+      prompt: "Enter your github URL :"
+      private: no
+    - name: "githubuser"
+      prompt: "Enter your github username :"
+      private: no
+    - name: "githubpassword"
+      prompt: "Enter your github password :"
+      private: yes
+    - name: "githubreponame"
+      prompt: "Enter github repository name you want :"
+      private: no
+
+
+  tasks:
+    - shell: cd /root/test5
+    - shell: echo "Git will be initialized in directory $PWD"
+    - shell: git init
+    - shell: curl --user {{ githubuser }}:{{ githubpassword }} https://api.bitbucket.org/1.0/repositories/ --data name={{ githubreponame }}
+    - shell: sleep 20s
+    - shell: git remote set-url origin  https://{{ githubuser }}@bitbucket.org/{{ githubuser }}/{{ githubreponame }}.git
+    - shell: git add *
+    - shell: git commit -m "This is my sample commit"
+    - shell: git push origin master
+      register: output
+    - debug: msg="{{output.stdout.split('\n')}}"
