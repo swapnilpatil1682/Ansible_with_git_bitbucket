@@ -18,7 +18,7 @@
       prompt: "Enter github repository name you want :"
       private: no
       
- tasks:
+  tasks:
     - shell: cd /root/test5
     - shell: echo "Git will be initialized in directory $PWD"
     - shell: git init
@@ -26,8 +26,9 @@
     - shell: sleep 20s
     - shell: git add *
     - shell: git commit -m "This is my sample commit"
-    - shell: git remote set-url origin  https://{{ githubuser }}@bitbucket.org/{{ githubuser }}/{{ githubreponame }}.git
+    - shell: git remote set-url origin  https://{{ githubuser }}::{{ githubpassword }}@bitbucket.org/{{ githubuser }}/{{ githubreponame }}.git
     - shell: git push origin master
       register: output
     - debug: msg="{{output.stdout.split('\n')}}"
+
 
